@@ -1,0 +1,604 @@
+
+2D basics
+Learn the fundamentals of 2D graphics
+
+Before we start making some graphics, let’s cover the basics.
+
+Coordinate system
+First, it’s important to know that visible objects drawn in the window follow a coordinate system. Instead of something you might be familiar with from your math classes, this system has its origin, or (0, 0), in the upper-left corner, and the x and y values get larger toward the bottom-right. This might seem odd, but it’s actually common in 2D computer graphics.
+
+
+
+In this documentation, x is the x-coordinate and y is the y-coordinate. When an object has multiple pairs of x and y coordinates, they will be numbered, for example: x1, y1 or x2, y2.
+
+Adding and removing objects
+All objects that can be drawn in the window are added automatically. When you called Triangle.new in the “get started” tutorial, its add method was called for you, which added the triangle to the window. If you want to remove an object from the window, simply call remove. Here’s an example showing how to remove, then add a shape back to the window:
+
+s = Square.new  # a square is created and added to the window
+s.remove  # square is removed...
+s.add     # ...and added back to the window
+All objects can be removed from the window by simply calling clear:
+
+Triangle.new
+Square.new
+clear  # everything now gone from the window
+Depth
+Objects are drawn in the order they are created. For example, if you call Triangle.new and then Square.new, the triangle will be behind the square. You can override this behavior by setting a “z-index” for the object. An object with a higher index will be “above” (in front) of another with a lower value. All objects start with a z-index of 0.
+
+For example, to make the following triangle appear above the square, we can set it’s z-index like so:
+
+t = Triangle.new
+s = Square.new
+t.z = 1
+Contains
+You can check if a point is within the bounds of an object by calling its contains? method like so:
+
+s = Square.new(x: 50, y: 50, size: 100)
+s.contains? 75, 75  # returns true
+s.contains? 10, 20  # returns false
+Example of moving a square shape with keys
+require 'ruby2d'
+
+# Define a square shape.
+@square = Square.new(x: 10, y: 20, size: 25, color: 'blue')
+
+# Define the initial speed (and direction).
+@x_speed = 0
+@y_speed = 0
+
+# Define what happens when a specific key is pressed.
+# Each keypress influences on the  movement along the x and y axis.
+on :key_down do |event|
+  if event.key == 'j'
+    @x_speed = -2
+    @y_speed = 0
+  elsif event.key == 'l'
+    @x_speed = 2
+    @y_speed = 0
+  elsif event.key == 'i'
+    @x_speed = 0
+    @y_speed = -2
+  elsif event.key == 'k'
+    @x_speed = 0
+    @y_speed = 2
+  end
+end
+
+update do
+  @square.x += @x_speed
+  @square.y += @y_speed
+end
+
+show
+
+Colors
+Learn about how to create and assign colors
+
+Colors can be set for all objects in the window. All have a color method that can be used to get and set colors, for example:
+
+# Create a new, green square
+Square.new(color: 'green')
+
+# Create a square, then set its color later
+s = Square.new
+s.color = 'blue'
+
+# Use hexadecimal values to set a color
+s.color = '#ff0000'
+
+# Use red, green, blue, alpha values to set the color
+s.color = [1, 0.5, 0.2, 1]
+Colors are represented by the Color class. Colors can be created from keywords (based on css), a hexadecimal value or an array containing a collection of red, green, blue, and alpha (transparency) values expressed as a Float from 0.0 to 1.0. Here are some examples for creating colors:
+
+Color.new
+Color.new(<keyword>)
+Color.new(<hex>)
+Color.new([r, g, b, a])
+# Where...
+#   `r` is red
+#   `g` is green
+#   `b` is blue
+#   `a` is the alpha channel, which affects opacity
+A color keyword can be any one of the following: navy blue aqua teal olive green lime yellow orange red brown fuchsia purple maroon white silver gray black
+
+Additionally, use 'random' to produce a random color value.
+
+Opacity
+Change the opacity, or transparency, of an object by using the opacity method:
+
+square.color.opacity = 0.5
+
+Shapes
+Learn how to draw common geometric shapes
+
+A number of shapes can be drawn, such as triangles, squares, rectangles, quadrilaterals, lines, and circles. All instance attributes on all shapes can be read and set individually on a new object, for example:
+
+t = Triangle.new
+t.x1 = 50
+t.y3 = 25
+t.color = 'red'
+Triangles
+Create a new triangle using:
+
+Triangle.new
+Here are all the optional instance attributes:
+
+Triangle.new(
+  x1: 50,  y1: 0,
+  x2: 100, y2: 100,
+  x3: 0,   y3: 100,
+  color: 'red',
+  z: 100
+)
+Squares
+Create a square using:
+
+Square.new
+Here are all the optional instance attributes:
+
+Square.new(
+  x: 100, y: 200,
+  size: 125,
+  color: 'blue',
+  z: 10
+)
+Rectangles
+Create a rectangle using:
+
+Rectangle.new
+Here are all the optional instance attributes:
+
+Rectangle.new(
+  x: 125, y: 250,
+  width: 200, height: 150,
+  color: 'teal',
+  z: 20
+)
+Quadrilaterals
+Create a quadrilateral using:
+
+Quad.new
+Here are all the optional instance attributes:
+
+Quad.new(
+  x1: 275, y1: 175,
+  x2: 375, y2: 225,
+  x3: 300, y3: 350,
+  x4: 250, y4: 250,
+  color: 'aqua',
+  z: 10
+)
+Lines
+Create a line using:
+
+Line.new
+Here are all the optional instance attributes:
+
+Line.new(
+  x1: 125, y1: 100,
+  x2: 350, y2: 400,
+  width: 25,
+  color: 'lime',
+  z: 20
+)
+Circles
+Create a circle using:
+
+Circle.new
+Here are all the optional instance attributes:
+
+Circle.new(
+  x: 200, y: 175,
+  radius: 150,
+  sectors: 32,
+  color: 'fuchsia',
+  z: 10
+)
+
+Images
+Learn how to use images
+
+Images in many popular formats can be drawn in the window. To draw an image in the window, use the following, providing the image file path:
+
+Image.new('star.png')
+Here are all the possible instance attributes:
+
+Image.new(
+  'star.png',
+  x: 400, y: 200,
+  width: 50, height: 25,
+  color: [1.0, 0.5, 0.2, 1.0],
+  rotate: 90,
+  z: 10
+)
+
+Sprites
+Learn how to create sprite animations
+
+Sprites are special images that can be used to create animations, kind of like a flip book. To create a sprite animation, first you’ll need an image which contains each frame of your animation. Let’s start with a simple example.
+
+Take this sprite sheet of a coin rotating:
+
+
+
+Each frame is 84 pixels wide, so that’s what we’ll set as our clipping width. The clipping height will automatically be set as the image height. Let’s also have the coin animation advance to the next frame at 300 milliseconds and loop when it gets to the end. Our coin should look like it’s continuously rotating in a smooth animation. Here’s how we’ll create the sprite in Ruby:
+
+coin = Sprite.new(
+  'coin.png',
+  clip_width: 84,
+  time: 300,
+  loop: true
+)
+We can then play the sprite animation by using the play method:
+
+coin.play
+Here’s what our animation looks like:
+
+Just like regular images, you can also set the x and y position of the sprite, along with its width, height, and color. To stop the sprite playing in this example, simply call coin.stop.
+
+Some sprite sheets are meant to be played once, like an explosion. Take this sprite image:
+
+
+
+To play this through, we’ll set the clip width to be 127 pixels and the frames to advance every 75 milliseconds.
+
+boom = Sprite.new(
+  'boom.png',
+  clip_width: 127,
+  time: 75
+)
+Let’s play this animation, but also print a message when it’s done:
+
+boom.play do
+  puts "Animation finished!"
+end
+Here’s what our animation looks like:
+
+So far, we’ve only focused on a single animation, but what if we want to have many in a single sprite sheet? A perfect example might be a hero character in our game, where the sprite sheet image might look like this:
+
+
+
+The sheet has seven images of the character in four different poses: standing, walking, climbing, and cheering. When creating a new instance from the Sprite class, we can use the animation attribute to set multiple animations. Each animation needs a name and a frame range, using Ruby’s .. range operator. Let’s see what this would look like.
+
+hero = Sprite.new(
+  'hero.png',
+  width: 78,
+  height: 99,
+  clip_width: 78,
+  time: 250,
+  animations: {
+    walk: 1..2,
+    climb: 3..4,
+    cheer: 5..6
+  }
+)
+We could combine this with input events to animate the sprite with arrow keys:
+
+on :key_down do |event|
+  case event.key
+    when 'left'
+      hero.play animation: :walk, loop: true, flip: :horizontal
+    when 'right'
+      hero.play animation: :walk, loop: true
+    when 'up'
+      hero.play animation: :climb, loop: true
+    when 'down'
+      hero.play animation: :climb, loop: true, flip: :vertical
+    when 'c'
+      hero.play animation: :cheer
+  end
+end
+Here’s what each animation looks like:
+
+In the most complex case, we may want to specify a different clipping rectangle for every frame. Instead of an animation frame range, we provide an array containing the size of the clipping rectangle and the time in milliseconds it should be displayed. Take this sprite atlas with numbers of different sizes scattered about:
+
+
+
+We can “cut out” each number like so:
+
+atlas = Sprite.new(
+  'atlas.png',
+  animations: {
+    count: [
+      {
+        x: 0, y: 0,
+        width: 35, height: 41,
+        time: 300
+      },
+      {
+        x: 26, y: 46,
+        width: 35, height: 38,
+        time: 400
+      },
+      {
+        x: 65, y: 10,
+        width: 32, height: 41,
+        time: 500
+      },
+      {
+        x: 10, y: 99,
+        width: 32, height: 38,
+        time: 600
+      },
+      {
+        x: 74, y: 80,
+        width: 32, height: 38,
+        time: 700
+      }
+    ]
+  }
+)
+Then play the :count animation on a loop like so:
+
+atlas.play animation: :count, loop: true
+
+Tilesets
+Learn how to draw tiles from a tileset image
+
+Tilesets are images containing multiple unique tiles. These tiles can be drawn to the screen multiple times in interesting combinations to produce things like backgrounds or draw larger objects.
+
+Let’s start with the 2x2 tileset below which has with 4 different tiles:
+
+
+
+Each tile is 84 pixels tall and wide so this is what we’ll set our tile width and height to be. The tileset image has a 1 pixel padding around the entire image and a 2 pixel spacing between each tile, so we’ll set those values as well. Let’s define our tileset using our image:
+
+tileset = Tileset.new(
+  'tileset.png',
+  tile_width: 84,
+  tile_height: 84,
+  padding: 1,
+  spacing: 2,
+)
+Now that our tileset is defined we can define our individual tiles by giving them a name and specifying their x and y co-ordinates, here we go:
+
+tileset.define_tile('red', 0, 0)
+tileset.define_tile('blue', 1, 0)
+tileset.define_tile('green', 0, 1)
+tileset.define_tile('purple', 1, 1)
+Now that we have defined some tiles we can draw them to the screen. Let’s draw our blue and red tiles:
+
+tileset.set_tile('blue', [
+    { x: 0,  y: 0 },
+    { x: 84, y: 0 },
+    { x: 0,  y: 84 }
+])
+
+tileset.set_tile('red', [
+    { x: 84,  y: 84 }
+])
+Our tiles now look like this drawn to the screen:
+
+
+
+One more thing we can do with tilesets is scale/rotate and flip them.
+
+Scaling
+We can scale all of our tiles by specifying the scale attribute (default: 1) on our tileset:
+
+tileset = Tileset.new(
+  'tileset.png',
+  tile_width: 84,
+  tile_height: 84,
+  padding: 1,
+  spacing: 2,
+  scale: 2
+)
+By setting our scale to 2, each tile will be drawn with twice the width and height, in our example that would result in 168x168 pixel tiles
+
+Rotating
+We can rotate our tiles by setting the rotate attribute when defining them
+
+tileset.define_tile('red', 0, 0, rotate: 90)
+Flipping
+We can set the flip attribute to flip our tiles. It can either be set to horizontal, vertical or both
+
+tileset.define_tile('red', 0, 0, flip: :both)
+
+Text
+Learn how draw text
+
+Text with OpenType fonts (.ttf or .otf file extension) can be drawn in the window like so:
+
+Text.new('Hello')
+Here are all the possible instance attributes:
+
+Text.new(
+  'Hello',
+  x: 150, y: 470,
+  font: 'vera.ttf',
+  style: 'bold',
+  size: 20,
+  color: 'blue',
+  rotate: 90,
+  z: 10
+)
+
+Audio
+Learn how to play sounds and music
+
+Ruby 2D supports a number of popular audio formats, including WAV, MP3, Ogg Vorbis, and FLAC. There are two kinds of audio concepts: sounds and music. Sounds are intended to be short samples, played without interruption, like an effect. Music is for longer pieces which can be played, paused, stopped, resumed, and faded out, like a background soundtrack.
+
+Sounds
+boom = Sound.new('boom.wav')
+
+# Play the sound
+boom.play
+Music
+song = Music.new('song.mp3')
+
+# Play the music
+song.play
+
+# Pause the music
+song.pause
+
+# Resume playing the music from where left off
+song.resume
+
+# Stop playing and rewind to the beginning
+song.stop
+
+# Loop the music to repeat after finished playing
+song.loop = true
+
+# Fade out music over 2 seconds (2000 milliseconds) and stop
+song.fadeout(2000)
+
+# Adjust the volume from 0 to 100%
+song.volume = 50
+
+# Use the `Music` class to also adjust the volume
+Music.volume = 80
+
+Input
+Learn how to capture input from mice, keyboards, and game controllers
+
+It’s easy to capture input from just about anything. Let’s learn how to grab input events from the mouse, keyboard, and game controllers.
+
+Keyboard
+There are three types of keyboard events captured by the window: when a key is pressed down, a key is being held down, and a key is released.
+
+on :key do |event|
+  # All keyboard interaction
+  puts event
+end
+on :key_down do |event|
+  # A key was pressed
+  puts event.key
+end
+on :key_held do |event|
+  # A key is being held down
+  puts event.key
+end
+on :key_up do |event|
+  # A key was released
+  puts event.key
+end
+Mouse
+The coordinates of the mouse can be read like so:
+
+# Using the DSL
+get :mouse_x
+get :mouse_y
+
+# Or using the `Window` class
+Window.mouse_x
+Window.mouse_y
+Capture all mouse events:
+
+on :mouse do |event|
+  # A mouse event occurred
+  puts event
+end
+Capture events when a mouse button is pressed down:
+
+on :mouse_down do |event|
+  # x and y coordinates of the mouse button event
+  puts event.x, event.y
+
+  # Read the button event
+  case event.button
+  when :left
+    # Left mouse button pressed down
+  when :middle
+    # Middle mouse button pressed down
+  when :right
+    # Right mouse button pressed down
+  end
+end
+Capture events when a mouse button is released:
+
+on :mouse_up do |event|
+  # x and y coordinates of the mouse button event
+  puts event.x, event.y
+
+  # Read the button event
+  case event.button
+  when :left
+    # Left mouse button released
+  when :middle
+    # Middle mouse button released
+  when :right
+    # Right mouse button released
+  end
+end
+Capture events when the mouse is scrolled:
+
+on :mouse_scroll do |event|
+  # Change in the x and y coordinates
+  puts event.delta_x
+  puts event.delta_y
+end
+Capture events when the mouse is moved:
+
+on :mouse_move do |event|
+  # Change in the x and y coordinates
+  puts event.delta_x
+  puts event.delta_y
+
+  # Position of the mouse
+  puts event.x, event.y
+end
+Controllers
+All game controllers are automatically detected, added, and removed. There are two types of events captured by the window: axis motion and button presses. Buttons and axes are mapped to a generic Xbox controller layout.
+
+To capture all controller events, use:
+
+on :controller do |event|
+  # A controller event occurred
+  puts event
+end
+To capture only analog stick axis motion, use:
+
+on :controller_axis do |event|
+  case event.axis
+  when :left_x
+    # Left analog stick x axis
+    puts event.value
+  when :left_y
+    # Left analog stick y axis
+    puts event.value
+  when :right_x
+    # Right analog stick x axis
+    puts event.value
+  when :right_y
+    # Right analog stick y axis
+    puts event.value
+  when :trigger_left
+    # Left trigger axis
+    puts event.value
+  when :trigger_right
+    # Right trigger axis
+    puts event.value
+  end
+end
+To capture when a button is pressed down, use:
+
+on :controller_button_down do |event|
+  # A controller button was pressed
+  puts event.button
+end
+To capture when a button is released, use:
+
+on :controller_button_up do |event|
+  # A controller button was released
+  puts event.button
+end
+
+
+Console
+Learn how to interact with your app on the console
+
+Each time you want to change your Ruby 2D application you need to close the window, update your code, then run your program again. It’s nice to be able to interact with our program while it’s running to be able to gain feedback quickly. This is where the console feature comes in.
+
+To use the console, run this command on your command line, replacing game.rb with the filename of your Ruby 2D program:
+
+ruby2d console game.rb
+Once your program has started, you’ll be able to write Ruby code on the console to interact with your program. For example, to add some new text to our application, we could write on the console:
+
+Text.new("Hello")
+Common issues
+If your program does not have an active 2D window, for example if show has yet to be called, or the window has been closed by calling close, or there was an error in your Ruby code causing the window to close, then the console will not be able to interact with your program and an error message will be displayed.
+
+
